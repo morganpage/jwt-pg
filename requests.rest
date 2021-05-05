@@ -1,0 +1,33 @@
+### Create a USER
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+  "name": "Bob",
+  "email" : "bob@gmail.com",
+  "password": "passwordbob"
+}
+
+###List USERS
+GET http://localhost:5000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOTc4ZDM2ZDgtZmEyNS00YTA2LWEzODAtZWYyNDViZTFkOGIwIiwidXNlcl9uYW1lIjoiTW9yZ2FuIiwidXNlcl9lbWFpbCI6Im1vcmdhbkBnbWFpbC5jb20iLCJpYXQiOjE2MjAyNTQwMTUsImV4cCI6MTYyMDI1NDA0NX0.zNve8UI5gN3iC3O9UrVZxxOphurCsgCuFJOKXSMQvMw
+###
+
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+  "email":"morgan@gmail.com",
+  "password":"password"
+}
+
+###REFRESH TOKENS
+GET http://localhost:5000/refresh_token
+
+###
+
+DELETE http://localhost:5000/refresh_token
+
+###
+
+DELETE http://localhost:5000/users
