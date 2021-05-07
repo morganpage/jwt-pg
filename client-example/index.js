@@ -1,4 +1,6 @@
 let accessToken = '';
+let url = 'https://jwt-pg-morganpage-tech.herokuapp.com';//http://localhost:5000
+//let url = 'http://localhost:5000';//http://localhost:5000
 const formLogin = document.getElementById("form-login");
 const buttonGetUsers = document.getElementById("button-get-users");
 const buttonRefreshToken = document.getElementById("button-refresh-token");
@@ -18,7 +20,7 @@ formLogin.onsubmit = async e => {
 
 async function login(data) {
   console.log(JSON.stringify(data));
-  const res = await fetch(`http://localhost:5000/login`, {
+  const res = await fetch(`${url}/login`, {
     method: 'POST',
     credentials:'include',
     cache:'no-cache',
@@ -47,7 +49,7 @@ buttonGetUsers.onclick = async () => {
 }
 
 async function fetchUsers(token) {
-  const res = await fetch(`http://localhost:5000/users`, {
+  const res = await fetch(`${url}/users`, {
     headers: {
       'Authorization': 'Bearer ' + token,
     }
@@ -67,7 +69,7 @@ buttonRefreshToken.onclick = async () => {
 }
 
 async function fetchRefreshToken(){
-  const res = await fetch(`http://localhost:5000/refresh_token`,{
+  const res = await fetch(`${url}/refresh_token`,{
     headers: {
       'Content-Type': 'application/json'
     },
