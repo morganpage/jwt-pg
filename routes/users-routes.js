@@ -11,10 +11,11 @@ const router = express.Router();
 /* GET users listing. */
 router.get('/',authenticateToken, async (req, res) => {
   try {
+    console.log(req.cookies);
     const users = await pool.query('SELECT * FROM users');
-    res.json(users.rows);
+    res.json({users : users.rows});
   } catch (error) {
-    console.error(error.message);
+    res.status(500).json({error: error.message});
   }
 });
 
@@ -26,8 +27,7 @@ router.post('/', async (req, res) => {
       , [req.body.name, req.body.email, hashedPassword]);
     res.json(jwtTokens(newUser.rows[0]));
   } catch (error) {
-    console.log(error.message);
-    res.sendStatus(500);
+    res.status(500).json({error: error.message});
   }
 });
 
@@ -36,7 +36,7 @@ router.delete('/', async (req,res)=>{
     const users = await pool.query('DELETE FROM users');
     res.status(204).json(users.rows);
   } catch (error) {
-    console.error(error.message);
+    res.status(500).json({error: error.message});
   }
 })
 

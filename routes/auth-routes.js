@@ -8,18 +8,19 @@ const router = express.Router();
 
 router.post('/login', async (req, res) => {
   try {
+    console.log(req.cookies, req.get('origin'));
     const { email, password } = req.body;
     const users = await pool.query('SELECT * FROM users WHERE user_email = $1', [email]);
-    if (users.rows.length === 0) return res.status(401).json("Email is incorrect");
+    if (users.rows.length === 0) return res.status(401).json({error:"Email is incorrect"});
     //PASSWORD CHECK
     const validPassword = await bcrypt.compare(password, users.rows[0].user_password);
-    if (!validPassword) return res.status(401).json("Incorrect password");
+    if (!validPassword) return res.status(401).json({error: "Incorrect password"});
     //JWT
     let tokens = jwtTokens(users.rows[0]);//Gets access and refresh tokens
-    res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
-    return res.json(tokens);
+    res.cookie('refresh_token', tokens.refreshToken, {...(process.env.COOKIE_DOMAIN && {domain: process.env.COOKIE_DOMAIN}) , httpOnly: true});
+    res.json(tokens);
   } catch (error) {
-    return res.status(401).json(error.message);
+    res.status(401).json({error: error.message});
   }
 
 });
@@ -27,24 +28,25 @@ router.post('/login', async (req, res) => {
 router.get('/refresh_token', (req, res) => {
   try {
     const refreshToken = req.cookies.refresh_token;
+    console.log(req.cookies);
     if (refreshToken === null) return res.sendStatus(401);
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-      if (err) return res.sendStatus(403);
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
+      if (error) return res.status(403).json({error:error.message});
       let tokens = jwtTokens(user);
-      res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+      res.cookie('refresh_token', tokens.refreshToken, {...(process.env.COOKIE_DOMAIN && {domain: process.env.COOKIE_DOMAIN}) , httpOnly: true});
       return res.json(tokens);
     });
   } catch (error) {
-    return res.status(401).json(error.message);
+    res.status(401).json({error: error.message});
   }
 });
 
 router.delete('/refresh_token', (req, res) => {
   try {
     res.clearCookie('refresh_token');
-    return res.sendStatus(204);
+    res.sendStatus(204);
   } catch (error) {
-    return res.status(401).json(error.message);
+    res.status(401).json({error: error.message});
   }
 });
 

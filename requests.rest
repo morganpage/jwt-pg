@@ -5,20 +5,20 @@ Content-Type: application/json
 {
   "name": "Bob",
   "email" : "bob@gmail.com",
-  "password": "passwordbob"
+  "password": "bob"
 }
 
 ###List USERS
 GET http://localhost:5000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOTc4ZDM2ZDgtZmEyNS00YTA2LWEzODAtZWYyNDViZTFkOGIwIiwidXNlcl9uYW1lIjoiTW9yZ2FuIiwidXNlcl9lbWFpbCI6Im1vcmdhbkBnbWFpbC5jb20iLCJpYXQiOjE2MjAyNTQwMTUsImV4cCI6MTYyMDI1NDA0NX0.zNve8UI5gN3iC3O9UrVZxxOphurCsgCuFJOKXSMQvMw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjU5NmVjYTQtOTQ0NS00NmY3LWExNDYtMzg2M2Q1YmQ3YWU0IiwidXNlcl9uYW1lIjoiQm9iIiwidXNlcl9lbWFpbCI6ImJvYkBnbWFpbC5jb20iLCJpYXQiOjE2MjAzMTAzODgsImV4cCI6MTYyMDMxMDQxOH0.ae6yETgMWgsVAwG3e1pssuHDUqjoc0ob2CUWLyKFsEw
 ###
 
 POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-  "email":"morgan@gmail.com",
-  "password":"password"
+  "email":"bob@gmail.com",
+  "password":"bob"
 }
 
 ###REFRESH TOKENS
