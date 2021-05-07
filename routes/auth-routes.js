@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
     if (!validPassword) return res.status(401).json({error: "Incorrect password"});
     //JWT
     let tokens = jwtTokens(users.rows[0]);//Gets access and refresh tokens
-    res.cookie('refresh_token', tokens.refreshToken, {...(process.env.COOKIE_DOMAIN && {domain: process.env.COOKIE_DOMAIN}) , httpOnly: true,sameSite: 'none'});
+    res.cookie('refresh_token', tokens.refreshToken, {...(process.env.COOKIE_DOMAIN && {domain: process.env.COOKIE_DOMAIN}) , httpOnly: true,sameSite: 'none', secure: true});
     res.json(tokens);
   } catch (error) {
     res.status(401).json({error: error.message});
@@ -33,7 +33,7 @@ router.get('/refresh_token', (req, res) => {
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
       if (error) return res.status(403).json({error:error.message});
       let tokens = jwtTokens(user);
-      res.cookie('refresh_token', tokens.refreshToken, {...(process.env.COOKIE_DOMAIN && {domain: process.env.COOKIE_DOMAIN}) , httpOnly: true,sameSite: 'none'});
+      res.cookie('refresh_token', tokens.refreshToken, {...(process.env.COOKIE_DOMAIN && {domain: process.env.COOKIE_DOMAIN}) , httpOnly: true,sameSite: 'none', secure: true});
       return res.json(tokens);
     });
   } catch (error) {
