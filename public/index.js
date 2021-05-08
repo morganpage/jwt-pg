@@ -1,10 +1,16 @@
 let accessToken = '';
-let url = 'https://jwt-pg-morganpage-tech.herokuapp.com';//http://localhost:5000
-//let url = 'http://localhost:5000';//http://localhost:5000
+//let api_url = 'https://jwt-pg-morganpage-tech.herokuapp.com/api';
+let api_url = 'http://localhost:5000/api';
+const divLogin = document.getElementById("div-login");
 const formLogin = document.getElementById("form-login");
 const buttonGetUsers = document.getElementById("button-get-users");
 const buttonRefreshToken = document.getElementById("button-refresh-token");
+const buttonDeleteToken = document.getElementById("button-delete-token");
 const pStatus = document.getElementById("login-status");
+
+showLoginPanel = (bShow) => {
+  bShow ? divLogin.style.display = "flex" : divLogin.style.display = "none";
+}
 
 formLogin.onsubmit = async e => {
   e.preventDefault();
@@ -16,11 +22,12 @@ formLogin.onsubmit = async e => {
   }
   accessToken = loginDetails.accessToken;
   pStatus.innerText = "Login Successful!";
+  showLoginPanel(false);
 }
 
 async function login(data) {
   console.log(JSON.stringify(data));
-  const res = await fetch(`${url}/login`, {
+  const res = await fetch(`${api_url}/auth/login`, {
     method: 'POST',
     credentials:'include',
     cache:'no-cache',
@@ -39,6 +46,7 @@ buttonGetUsers.onclick = async () => {
   const {users,error} = await fetchUsers(accessToken);
   if(error){
     pStatus.innerText = error;
+    showLoginPanel(true);
     return;
   }
   users.forEach(({user_name,user_email}) => {
@@ -49,7 +57,7 @@ buttonGetUsers.onclick = async () => {
 }
 
 async function fetchUsers(token) {
-  const res = await fetch(`${url}/users`, {
+  const res = await fetch(`${api_url}/users`, {
     headers: {
       'Authorization': 'Bearer ' + token,
     }
@@ -66,10 +74,11 @@ buttonRefreshToken.onclick = async () => {
   }
   accessToken = refreshDetails.accessToken;
   pStatus.innerText = "Login Successful!";
+  showLoginPanel(false);
 }
 
 async function fetchRefreshToken(){
-  const res = await fetch(`${url}/refresh_token`,{
+  const res = await fetch(`${api_url}/auth/refresh_token`,{
     headers: {
       'Content-Type': 'application/json'
     },
@@ -78,8 +87,27 @@ async function fetchRefreshToken(){
   });  
   const jsonResponse = await res.json();
   return jsonResponse;
-  // if (res.status === 200) {
-  //   return { accessToken: jsonResponse.accessToken };
-  // }
-  // return { error: jsonResponse };
+}
+
+buttonDeleteToken.onclick = async () => {
+  const deleteDetails = await deleteToken();
+  if (deleteDetails.error) {
+    pStatus.innerText = deleteDetails.error;
+    return;
+  }
+  accessToken = "";
+  pStatus.innerText = deleteDetails.message;
+  showLoginPanel(true);
+}
+
+async function deleteToken(){
+  const res = await fetch(`${api_url}/auth/refresh_token`,{
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    mode: 'cors',
+    credentials: 'include'
+  });  
+  return await res.json();
 }

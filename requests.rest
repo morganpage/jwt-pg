@@ -1,33 +1,32 @@
 ### Create a USER
-POST http://localhost:5000/users
+POST http://localhost:5000/api/users
 Content-Type: application/json
 
 {
   "name": "Bob",
-  "email" : "bob@gmail.com",
+  "email" : "bob@email.com",
   "password": "bob"
 }
 
 ###List USERS
-GET http://localhost:5000/users
+GET http://localhost:5000/api/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjU5NmVjYTQtOTQ0NS00NmY3LWExNDYtMzg2M2Q1YmQ3YWU0IiwidXNlcl9uYW1lIjoiQm9iIiwidXNlcl9lbWFpbCI6ImJvYkBnbWFpbC5jb20iLCJpYXQiOjE2MjAzMTAzODgsImV4cCI6MTYyMDMxMDQxOH0.ae6yETgMWgsVAwG3e1pssuHDUqjoc0ob2CUWLyKFsEw
 ###
 
-POST http://localhost:5000/login
+POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-  "email":"bob@gmail.com",
+  "email":"bob@email.com",
   "password":"bob"
 }
 
 ###REFRESH TOKENS
-GET http://localhost:5000/refresh_token
+GET http://localhost:5000/api/auth/refresh_token
 
 ###
 
-DELETE http://localhost:5000/refresh_token
-
+DELETE http://localhost:5000/api/auth/refresh_token
 ###
 
-DELETE http://localhost:5000/users
+DELETE http://localhost:5000/api/users
