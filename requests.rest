@@ -1,4 +1,4 @@
-### Create a USER
+### Create a USER 1
 POST http://localhost:5000/api/users
 Content-Type: application/json
 
@@ -6,6 +6,15 @@ Content-Type: application/json
   "name": "Bob",
   "email" : "bob@email.com",
   "password": "bob"
+}
+### Create a USER 2
+POST http://localhost:5000/api/users
+Content-Type: application/json
+
+{
+  "name": "Fred",
+  "email" : "fred@email.com",
+  "password": "fred"
 }
 
 ###List USERS

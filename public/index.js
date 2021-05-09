@@ -1,6 +1,8 @@
+import {jwtDecode} from "./jwt-decode.js";
+
 let accessToken = '';
 //let api_url = 'https://jwt-pg-morganpage-tech.herokuapp.com/api';
-let api_url = 'http://localhost:5000/api';
+let api_url = '/api';//Will need to make this explicit if front-end on different server
 const divLogin = document.getElementById("div-login");
 const formLogin = document.getElementById("form-login");
 const buttonGetUsers = document.getElementById("button-get-users");
@@ -8,7 +10,7 @@ const buttonRefreshToken = document.getElementById("button-refresh-token");
 const buttonDeleteToken = document.getElementById("button-delete-token");
 const pStatus = document.getElementById("login-status");
 
-showLoginPanel = (bShow) => {
+let showLoginPanel = (bShow) => {
   bShow ? divLogin.style.display = "flex" : divLogin.style.display = "none";
 }
 
@@ -21,12 +23,13 @@ formLogin.onsubmit = async e => {
     return;
   }
   accessToken = loginDetails.accessToken;
-  pStatus.innerText = "Login Successful!";
+  const jwtDecoded = jwtDecode(accessToken);
+  pStatus.innerHTML = `Login Successful! </br> Hello ${jwtDecoded.user_name}</br> Your id is ${jwtDecoded.user_id}</br> Your email is ${jwtDecoded.user_email}`;
   showLoginPanel(false);
 }
 
 async function login(data) {
-  console.log(JSON.stringify(data));
+  //console.log(JSON.stringify(data));
   const res = await fetch(`${api_url}/auth/login`, {
     method: 'POST',
     credentials:'include',
@@ -51,7 +54,7 @@ buttonGetUsers.onclick = async () => {
   }
   users.forEach(({user_name,user_email}) => {
     let el = document.createElement("li");
-    el.innerText = `Name: ${user_name} Email: ${user_email}`; 
+    el.innerText = `${user_name} - ${user_email}`; 
     elUserList.append(el);
   });
 }
@@ -73,7 +76,8 @@ buttonRefreshToken.onclick = async () => {
     return;
   }
   accessToken = refreshDetails.accessToken;
-  pStatus.innerText = "Login Successful!";
+  const jwtDecoded = jwtDecode(accessToken);
+  pStatus.innerHTML = `Login Successful! </br> Hello ${jwtDecoded.user_name}</br> Your id is ${jwtDecoded.user_id}</br> Your email is ${jwtDecoded.user_email}`;
   showLoginPanel(false);
 }
 
@@ -111,3 +115,4 @@ async function deleteToken(){
   });  
   return await res.json();
 }
+
